@@ -1,0 +1,5 @@
+* deal.II slides
+  These are the slides I wrote for the deal.II conference in August 2015. They
+  are based on my thesis work.
+
+  There are, at the time I wrote this README, 45 slides; most of them are pictures.
