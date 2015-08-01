@@ -1,0 +1,57 @@
+* Other
+** ToC
+** octtree joke
+** why deal.II?
+   1. ROMs are _usually_ expressed as finite element methods
+   2. Friendly community
+   3. Anders Logg: "They have nearly 5000 lines of documentation"
+#+BEGIN_SRC shell
+[drwells@archway dealii-dev]$ cloc ./include
+     378 text files.
+     378 unique files.
+       2 files ignored.
+
+http://cloc.sourceforge.net v 1.64  T=1.42 s (264.3 files/s, 180140.8 lines/s)
+-------------------------------------------------------------------------------
+Language                     files          blank        comment           code
+-------------------------------------------------------------------------------
+C/C++ Header                   375          34261         113105         108829
+CMake                            1              4             23             18
+-------------------------------------------------------------------------------
+SUM:                           376          34265         113128         108847
+-------------------------------------------------------------------------------
+#+END_SRC
+** Why deal.II, part 2
+   1. LAPACK support (=geev=, =getrf=, =getrs=)
+   2. HDF5 and XDMF support (generate and use data)
+   3. C++11 support
+* POD overview
+** POD definition
+   1. method of snapshots
+   2. possible issues
+   3. quote source code
+** Pictures of POD vectors
+   get at least three and the centering trajectory
+* Regularized NSE / REG-ROMs
+  Small or unresolved scales cause issues (cite Philips, 1959ish)
+  Adding more POD vectors can *raise* the error (cite Giere et al, 2014)
+* Filters for REG-ROMs
+** results
+* deal.II implementation
+  1. Factory functions (=unique_ptr=) set up the ROM based on a =Parameters=
+     object.
+  2. No naked =new= s or =delete= s.
+#+BEGIN_SRC C++
+std::pair<std::string, std::unique_ptr<ODE::RungeKuttaBase>> rk_factory
+(const FullMatrix<double>              &boundary_matrix,
+ const FullMatrix<double>              &joint_convection,
+ const FullMatrix<double>              &laplace_matrix,
+ const FullMatrix<double>              &linear_operator,
+ const Vector<double>                  &mean_contribution_vector,
+ const FullMatrix<double>              &mass_matrix,
+ const std::vector<FullMatrix<double>> &nonlinear_operator,
+ const POD::NavierStokes::Parameters   &parameters);
+#+END_SRC
+
+  Returns something that runs RK4 and an output file name.
+* Conclusions and future work
